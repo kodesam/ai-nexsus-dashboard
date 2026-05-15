@@ -6,7 +6,7 @@
   <title>AI Nexus • Live Dashboard | Daily evolving AI tools & apps</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
     * {
@@ -16,239 +16,695 @@
     }
 
     body {
-      background: radial-gradient(circle at 15% 5%, #020617 0%, #00010c 100%);
+      background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #0f0d2d 100%);
       font-family: 'Inter', sans-serif;
-      color: #eef5ff;
-      line-height: 1.5;
+      color: #e0f2fe;
+      line-height: 1.6;
       scroll-behavior: smooth;
+      overflow-x: hidden;
     }
 
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .container {
+      position: relative;
+      z-index: 2;
+    }
+
+    /* Glassmorphism Panels */
     .glass-panel {
-      background: rgba(12, 25, 45, 0.65);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border-radius: 2rem;
-      border: 1px solid rgba(56, 128, 255, 0.3);
-      box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.4);
+      background: rgba(15, 23, 42, 0.7);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 1.5rem;
+      border: 1px solid rgba(56, 128, 255, 0.4);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3),
+                  inset 0 1px 0 rgba(255, 255, 255, 0.1);
     }
 
     .glass-card {
-      background: rgba(8, 18, 32, 0.7);
-      backdrop-filter: blur(12px);
-      border-radius: 1.5rem;
-      border: 1px solid rgba(59, 130, 246, 0.35);
-      transition: all 0.25s cubic-bezier(0.2, 0, 0, 1);
+      background: rgba(10, 15, 30, 0.8);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-radius: 1.25rem;
+      border: 1.5px solid rgba(59, 130, 246, 0.4);
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
       cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .glass-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+      transition: left 0.5s;
+    }
+
+    .glass-card:hover::before {
+      left: 100%;
     }
 
     .glass-card:hover {
-      border-color: #3b82f6;
-      transform: translateY(-4px);
-      box-shadow: 0 20px 30px -14px rgba(59, 130, 246, 0.35);
-      background: rgba(16, 32, 55, 0.85);
+      border-color: #0ea5e9;
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 20px 40px rgba(14, 165, 233, 0.25),
+                  0 0 60px rgba(59, 130, 246, 0.2),
+                  inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      background: rgba(15, 28, 50, 0.9);
     }
 
+    /* Header Gradient */
     .hero-gradient {
-      background: linear-gradient(115deg, #a5f3fc, #3b82f6, #8b5cf6);
+      background: linear-gradient(135deg, #06b6d4, #3b82f6, #8b5cf6, #ec4899);
+      background-size: 300% 300%;
       background-clip: text;
       -webkit-background-clip: text;
       color: transparent;
+      animation: gradientShift 8s ease infinite;
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* Digital Display Elements */
+    .digital-badge {
+      background: rgba(6, 182, 212, 0.15);
+      border: 1.5px solid #06b6d4;
+      border-radius: 8px;
+      padding: 0.4rem 1rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      font-family: 'Space Mono', monospace;
+      color: #06b6d4;
+      box-shadow: 0 0 20px rgba(6, 182, 212, 0.3);
+      text-transform: uppercase;
+      animation: pulse-glow 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 20px rgba(6, 182, 212, 0.3); }
+      50% { box-shadow: 0 0 40px rgba(6, 182, 212, 0.6); }
     }
 
     .chip {
-      background: rgba(59, 130, 246, 0.18);
-      border-radius: 40px;
-      padding: 0.25rem 1rem;
+      background: rgba(59, 130, 246, 0.2);
+      border-radius: 50px;
+      padding: 0.4rem 1.2rem;
       font-size: 0.75rem;
-      font-weight: 500;
-      border: 0.5px solid rgba(59, 130, 246, 0.5);
+      font-weight: 600;
+      border: 1px solid rgba(59, 130, 246, 0.6);
+      color: #60a5fa;
+      font-family: 'Space Mono', monospace;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-3px); }
     }
 
     .category-pill {
-      background: rgba(30, 45, 75, 0.8);
-      border-radius: 2rem;
-      padding: 0.45rem 1.2rem;
-      font-size: 0.8rem;
-      font-weight: 500;
+      background: rgba(30, 45, 75, 0.6);
+      border-radius: 50px;
+      padding: 0.6rem 1.4rem;
+      font-size: 0.85rem;
+      font-weight: 600;
       cursor: pointer;
-      transition: all 0.2s;
-      border: 1px solid rgba(72, 120, 255, 0.3);
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      border: 2px solid rgba(72, 120, 255, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .category-pill::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: rgba(59, 130, 246, 0.3);
+      transition: left 0.3s;
+      z-index: -1;
+    }
+
+    .category-pill:hover::before {
+      left: 100%;
     }
 
     .category-pill.active {
-      background: #2563eb;
-      border-color: #60a5fa;
-      color: white;
-      box-shadow: 0 4px 12px #2563eb40;
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+      border-color: #0ea5e9;
+      color: #ffffff;
+      box-shadow: 0 0 30px rgba(59, 130, 246, 0.5),
+                  inset 0 0 10px rgba(255, 255, 255, 0.1);
+      transform: scale(1.05);
     }
 
     .category-pill:hover:not(.active) {
-      background: #1e3a8a60;
       border-color: #7aa2f7;
+      background: rgba(59, 130, 246, 0.15);
+      transform: translateY(-2px);
     }
 
     input, select {
-      background: rgba(2, 10, 22, 0.85);
-      border: 1px solid #2d3a5e;
-      border-radius: 2rem;
-      padding: 0.7rem 1.2rem;
+      background: rgba(2, 10, 22, 0.9);
+      border: 2px solid rgba(45, 58, 94, 0.7);
+      border-radius: 50px;
+      padding: 0.8rem 1.4rem;
       color: #f1f5f9;
       font-family: 'Inter', sans-serif;
       outline: none;
-      transition: 0.2s;
+      transition: all 0.3s;
+      font-size: 0.95rem;
+    }
+
+    input::placeholder {
+      color: rgba(148, 163, 184, 0.6);
     }
 
     input:focus, select:focus {
-      border-color: #3b82f6;
-      box-shadow: 0 0 0 2px rgba(59,130,246,0.3);
+      border-color: #06b6d4;
+      box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.2),
+                  inset 0 0 10px rgba(6, 182, 212, 0.1);
+      background: rgba(6, 182, 212, 0.05);
+    }
+
+    /* Stat Cards */
+    .stat-card {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 1.5rem;
+      background: rgba(15, 28, 50, 0.5);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      border-radius: 1rem;
+      transition: all 0.3s;
+    }
+
+    .stat-card:hover {
+      background: rgba(59, 130, 246, 0.1);
+      border-color: #06b6d4;
+      transform: translateX(4px);
+    }
+
+    .stat-icon {
+      font-size: 1.5rem;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(59, 130, 246, 0.2);
+      border-radius: 8px;
+      border: 1px solid rgba(59, 130, 246, 0.4);
+    }
+
+    .stat-card.blue .stat-icon { background: rgba(59, 130, 246, 0.25); border-color: #3b82f6; color: #60a5fa; }
+    .stat-card.green .stat-icon { background: rgba(16, 185, 129, 0.25); border-color: #10b981; color: #6ee7b7; }
+    .stat-card.cyan .stat-icon { background: rgba(6, 182, 212, 0.25); border-color: #06b6d4; color: #22d3ee; }
+
+    .stat-value {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .stat-value-num {
+      font-size: 1.5rem;
+      font-weight: 700;
+      font-family: 'Space Mono', monospace;
+      letter-spacing: 1px;
+    }
+
+    .stat-value-label {
+      font-size: 0.75rem;
+      color: rgba(148, 163, 184, 0.8);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
     .live-badge {
-      background: #10b981;
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.9), rgba(220, 38, 38, 0.9));
       font-size: 0.65rem;
-      padding: 0.2rem 0.7rem;
+      padding: 0.3rem 0.8rem;
       border-radius: 20px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      font-family: 'Space Mono', monospace;
+      border: 1px solid rgba(239, 68, 68, 0.6);
+      animation: pulse-badge 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse-badge {
+      0%, 100% { box-shadow: 0 0 10px rgba(239, 68, 68, 0.4); }
+      50% { box-shadow: 0 0 20px rgba(239, 68, 68, 0.8); }
+    }
+
+    .featured-badge {
+      background: linear-gradient(135deg, rgba(251, 146, 60, 0.9), rgba(245, 158, 11, 0.9));
+      font-size: 0.65rem;
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      font-family: 'Space Mono', monospace;
+      border: 1px solid rgba(251, 146, 60, 0.6);
+    }
+
+    /* Tool Card Enhanced */
+    .tool-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+      gap: 1rem;
+    }
+
+    .tool-icon-wrapper {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(139, 92, 246, 0.3));
+      border: 1.5px solid rgba(59, 130, 246, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      color: #60a5fa;
+      box-shadow: 0 0 20px rgba(59, 130, 246, 0.2);
+      flex-shrink: 0;
+    }
+
+    .tool-info {
+      flex: 1;
+    }
+
+    .tool-name {
+      font-size: 1.1rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+
+    .tool-category {
+      font-size: 0.75rem;
+      color: #60a5fa;
       font-weight: 600;
-      letter-spacing: 0.3px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      font-family: 'Space Mono', monospace;
     }
 
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: #0a1220; border-radius: 10px; }
-    ::-webkit-scrollbar-thumb { background: #2c3e66; border-radius: 10px; }
-
-    .footer-glow {
-      border-top: 1px solid rgba(59,130,246,0.2);
+    .tool-external-link {
+      color: #0ea5e9;
+      transition: all 0.3s;
+      font-size: 1.2rem;
+      opacity: 0.7;
     }
-    
+
+    .tool-external-link:hover {
+      color: #ffffff;
+      opacity: 1;
+      transform: translate(2px, -2px);
+    }
+
+    .tool-description {
+      margin: 1rem 0;
+      color: #cbd5e1;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      flex-grow: 1;
+    }
+
+    .tool-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 1rem;
+      border-top: 1px solid rgba(59, 130, 246, 0.2);
+      gap: 1rem;
+    }
+
+    .tool-hostname {
+      font-size: 0.8rem;
+      color: rgba(96, 165, 250, 0.6);
+      font-family: 'Courier Prime', monospace;
+      font-weight: 600;
+    }
+
+    .tool-launch-btn {
+      font-size: 0.85rem;
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.4), rgba(6, 182, 212, 0.3));
+      border: 1px solid rgba(59, 130, 246, 0.5);
+      color: #60a5fa;
+      padding: 0.5rem 1rem;
+      border-radius: 30px;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.3s;
+      font-weight: 600;
+      white-space: nowrap;
+      text-decoration: none;
+    }
+
+    .tool-launch-btn:hover {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.8), rgba(6, 182, 212, 0.7));
+      border-color: #0ea5e9;
+      color: #ffffff;
+      box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
+    }
+
+    /* Grid Layout */
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+      padding-bottom: 3rem;
+    }
+
+    @media (min-width: 1024px) {
+      .grid-container {
+        grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+      }
+    }
+
+    @media (min-width: 1280px) {
+      .grid-container {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.5);
+      border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, #3b82f6, #06b6d4);
+      border-radius: 10px;
+      border: 2px solid rgba(15, 23, 42, 0.5);
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(180deg, #60a5fa, #22d3ee);
+    }
+
+    /* Footer */
+    .footer-section {
+      border-top: 1px solid rgba(59, 130, 246, 0.25);
+      padding-top: 2rem;
+      margin-top: 3rem;
+    }
+
     .developer-credit {
-      background: linear-gradient(135deg, #3b82f680, #8b5cf680);
+      background: linear-gradient(135deg, #3b82f6, #06b6d4, #8b5cf6);
+      background-size: 300% 300%;
       background-clip: text;
       -webkit-background-clip: text;
       color: transparent;
-      font-weight: 600;
+      font-weight: 700;
+      font-family: 'Space Mono', monospace;
+      animation: gradientShift 8s ease infinite;
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 3rem 2rem;
+      background: rgba(15, 28, 50, 0.4);
+      border-radius: 1.5rem;
+      border: 2px dashed rgba(59, 130, 246, 0.2);
+    }
+
+    .empty-state-icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+      opacity: 0.6;
+    }
+
+    .empty-state-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .empty-state-text {
+      color: rgba(148, 163, 184, 0.8);
+      font-size: 0.95rem;
+    }
+
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: rgba(10, 15, 30, 0.95);
+      border: 1.5px solid rgba(59, 130, 246, 0.6);
+      border-radius: 50px;
+      padding: 1rem 1.5rem;
+      font-size: 0.9rem;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      animation: slideIn 0.3s ease-out;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateX(400px);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .grid-container {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-gradient {
+        font-size: 1.75rem;
+      }
+
+      .stat-card {
+        padding: 0.75rem 1rem;
+      }
+
+      .stat-value-num {
+        font-size: 1.25rem;
+      }
     }
   </style>
 </head>
 <body>
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 md:py-8">
-  <!-- header -->
-  <div class="flex flex-wrap justify-between items-center gap-4 mb-8">
-    <div class="flex items-center gap-3">
-      <div class="text-4xl"><i class="fas fa-arrows-spin text-blue-400"></i></div>
-      <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight">AI<span class="hero-gradient">NEXUS</span></h1>
-      <div class="chip hidden lg:inline-flex"><i class="fas fa-sync-alt text-emerald-400 text-xs mr-1"></i> daily auto-refresh</div>
-    </div>
-    <div class="flex flex-wrap gap-3 items-center">
-      <div class="relative">
-        <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
-        <input type="text" id="globalSearch" placeholder="Search AI app, URL, tool..." class="pl-10 pr-4 w-56 md:w-72 text-sm">
+<div class="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-10">
+  
+  <!-- HEADER SECTION -->
+  <div class="flex flex-wrap justify-between items-start gap-6 mb-10">
+    <div class="flex items-center gap-4">
+      <div class="text-5xl md:text-6xl">
+        <i class="fas fa-rocket" style="background: linear-gradient(135deg, #3b82f6, #06b6d4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 10px rgba(59, 130, 246, 0.5));"></i>
       </div>
-      <div class="relative">
-        <select id="categorySelector" class="pl-4 pr-8 text-sm appearance-none cursor-pointer">
-          <option value="all">📁 All categories</option>
-          <option value="LLM">💬 LLM & Chat</option>
+      <div>
+        <h1 class="text-3xl md:text-4xl font-black tracking-tight">
+          AI<span class="hero-gradient">NEXUS</span>
+        </h1>
+        <p class="text-xs md:text-sm text-blue-300/70 uppercase tracking-widest font-semibold">live dashboard</p>
+      </div>
+      <div class="chip hidden lg:flex">
+        <i class="fas fa-sync-alt text-cyan-400 animate-spin"></i>
+        <span>Auto-Refresh Daily</span>
+      </div>
+    </div>
+
+    <div class="flex flex-wrap gap-3 items-center w-full sm:w-auto">
+      <div class="relative flex-1 sm:flex-none">
+        <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 text-sm"></i>
+        <input type="text" id="globalSearch" placeholder="Search tools..." class="pl-10 pr-4 w-full sm:w-64 text-sm">
+      </div>
+      <div class="relative flex-1 sm:flex-none">
+        <select id="categorySelector" class="pl-4 pr-10 text-sm appearance-none cursor-pointer w-full sm:w-auto">
+          <option value="all">📁 All</option>
+          <option value="LLM">💬 LLM</option>
           <option value="Image">🎨 Image</option>
           <option value="Video">🎥 Video</option>
-          <option value="Audio">🎧 Audio & Voice</option>
-          <option value="Coding">⚙️ Coding Agents</option>
+          <option value="Audio">🎧 Audio</option>
+          <option value="Coding">⚙️ Coding</option>
           <option value="Productivity">📊 Productivity</option>
           <option value="Research">🔬 Research</option>
         </select>
-        <i class="fas fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-gray-300 text-xs pointer-events-none"></i>
+        <i class="fas fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs pointer-events-none"></i>
       </div>
-      <button id="manualRefreshBtn" class="bg-blue-600/30 hover:bg-blue-600/60 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-medium transition flex items-center gap-2 border border-blue-500/30">
-        <i class="fas fa-cloud-arrow-up"></i> <span>Sync now</span>
+      <button id="manualRefreshBtn" class="px-4 py-2.5 rounded-full text-sm font-bold transition flex items-center gap-2 border border-cyan-500/40 bg-cyan-500/15 hover:bg-cyan-500/30 text-cyan-300 hover:text-cyan-100 whitespace-nowrap">
+        <i class="fas fa-sync-alt"></i> Refresh
       </button>
     </div>
   </div>
 
-  <!-- category quick filters -->
-  <div class="flex flex-wrap gap-2 justify-start mb-6 overflow-x-auto pb-2" id="categoryFilterBar">
-    <button data-cat="all" class="category-pill active">🌐 All tools</button>
-    <button data-cat="LLM" class="category-pill">💬 LLM</button>
-    <button data-cat="Image" class="category-pill">🎨 Image</button>
+  <!-- CATEGORY FILTERS -->
+  <div class="flex flex-wrap gap-2 justify-start mb-8 pb-2 overflow-x-auto" id="categoryFilterBar">
+    <button data-cat="all" class="category-pill active">🌐 All Tools</button>
+    <button data-cat="LLM" class="category-pill">💬 LLM & Chat</button>
+    <button data-cat="Image" class="category-pill">🎨 Image Gen</button>
     <button data-cat="Video" class="category-pill">🎥 Video</button>
     <button data-cat="Audio" class="category-pill">🎧 Audio</button>
-    <button data-cat="Coding" class="category-pill">🤖 Coding</button>
-    <button data-cat="Productivity" class="category-pill">📎 Productivity</button>
+    <button data-cat="Coding" class="category-pill">⚙️ Coding</button>
+    <button data-cat="Productivity" class="category-pill">📊 Productivity</button>
     <button data-cat="Research" class="category-pill">🔬 Research</button>
   </div>
 
-  <!-- stats -->
-  <div class="glass-panel p-4 mb-8 flex flex-wrap items-center justify-between">
-    <div class="flex gap-5 text-sm md:text-base">
-      <div><i class="fas fa-database text-blue-400 mr-1"></i> <span id="totalToolsCount">0</span> AI resources</div>
-      <div><i class="fas fa-calendar-day text-emerald-400 mr-1"></i> last update: <span id="lastUpdateTime">today</span></div>
-      <div><i class="fas fa-chart-line text-cyan-400"></i> <span id="newTodayBadge">0 new today</span></div>
+  <!-- STATS SECTION -->
+  <div class="glass-panel p-6 mb-10">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="stat-card blue">
+        <div class="stat-icon"><i class="fas fa-database"></i></div>
+        <div class="stat-value">
+          <div class="stat-value-num" id="totalToolsCount">0</div>
+          <div class="stat-value-label">Total Tools</div>
+        </div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-icon"><i class="fas fa-calendar-day"></i></div>
+        <div class="stat-value">
+          <div class="stat-value-num" id="lastUpdateTime">Today</div>
+          <div class="stat-value-label">Last Update</div>
+        </div>
+      </div>
+      <div class="stat-card cyan">
+        <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
+        <div class="stat-value">
+          <div class="stat-value-num" id="newTodayBadge">0</div>
+          <div class="stat-value-label">Added Today</div>
+        </div>
+      </div>
+      <div class="stat-card blue">
+        <div class="stat-icon"><i class="fas fa-bolt"></i></div>
+        <div class="stat-value">
+          <div class="stat-value-num">100%</div>
+          <div class="stat-value-label">Live Feed</div>
+        </div>
+      </div>
     </div>
-    <div class="text-xs text-blue-200/80 flex gap-1"><i class="fas fa-sync"></i> dynamic feed • new apps added daily</div>
   </div>
 
-  <!-- AI tools grid -->
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 pb-12" id="dashboardGrid">
-    <!-- Loading -->
-    <div class="col-span-full flex justify-center p-12"><i class="fas fa-spinner fa-pulse text-3xl text-blue-400"></i> Loading AI tools...</div>
+  <!-- TOOLS GRID -->
+  <div class="grid-container" id="dashboardGrid">
+    <div style="grid-column: 1/-1;" class="flex justify-center p-12">
+      <div class="flex flex-col items-center gap-3">
+        <i class="fas fa-spinner text-4xl text-blue-400 animate-spin"></i>
+        <p class="text-blue-300 font-semibold">Loading AI Tools...</p>
+      </div>
+    </div>
   </div>
 
-  <!-- footer -->
-  <div class="footer-glow pt-8 mt-2 text-center text-gray-400 text-sm flex flex-wrap justify-between items-center gap-3">
-    <div class="flex flex-col md:flex-row gap-2 items-center">
-      <span>✨ AI Nexus — constantly evolving index of AI tools & apps | <span id="dynamicDate"></span></span>
-      <span class="hidden md:inline mx-2">•</span>
-      <span class="developer-credit text-sm"><i class="fas fa-code"></i> Developer: Syed Aamir</span>
+  <!-- FOOTER -->
+  <div class="footer-section text-center text-slate-400 text-sm">
+    <div class="flex flex-col md:flex-row gap-2 items-center justify-center mb-4">
+      <span class="text-xs text-slate-500 uppercase tracking-wider">✨ AI Nexus Dashboard</span>
+      <span class="hidden md:inline text-slate-600">•</span>
+      <span id="dynamicDate" class="text-xs text-slate-500 font-mono"></span>
     </div>
-    <div class="flex gap-4"><i class="fab fa-github"></i> <i class="fab fa-discord"></i> <span class="hover:text-blue-300 cursor-pointer" id="simulateNewToolBtn"><i class="fas fa-plus-circle text-emerald-400"></i> suggest new tool</span></div>
+    <div class="flex flex-col sm:flex-row gap-3 justify-center items-center">
+      <span class="developer-credit text-xs">
+        <i class="fas fa-code mr-1"></i>Crafted by Syed Aamir
+      </span>
+      <span class="text-slate-600">•</span>
+      <div class="flex gap-4 text-base">
+        <i class="fab fa-github hover:text-blue-400 cursor-pointer transition"></i>
+        <i class="fab fa-discord hover:text-blue-400 cursor-pointer transition"></i>
+      </div>
+      <span class="text-slate-600">•</span>
+      <span class="hover:text-blue-300 cursor-pointer text-xs" id="simulateNewToolBtn">
+        <i class="fas fa-plus-circle text-emerald-400 mr-1"></i>Suggest Tool
+      </span>
+    </div>
   </div>
+
 </div>
 
 <script>
-  // ========== COMPLETE AI TOOLS DATABASE (FIXED - WILL DISPLAY IMMEDIATELY) ==========
+  // ========== ENHANCED AI TOOLS DATABASE ==========
   const masterAITools = [
-    { id: 1, name: "ChatGPT", url: "https://chat.openai.com", description: "Flagship conversational AI by OpenAI. GPT-4o, multimodal capabilities.", category: "LLM", icon: "fab fa-chat", featured: true },
-    { id: 2, name: "Claude 3.5", url: "https://claude.ai", description: "Anthropic's most advanced assistant with 200K context window.", category: "LLM", icon: "fas fa-comments", featured: true },
-    { id: 3, name: "Midjourney v6", url: "https://www.midjourney.com", description: "State of art AI image synthesis with incredible realism.", category: "Image", icon: "fas fa-palette", featured: true },
-    { id: 4, name: "DALL·E 3", url: "https://openai.com/dall-e-3", description: "High fidelity text-to-image with ChatGPT integration.", category: "Image", icon: "fas fa-image", featured: true },
-    { id: 5, name: "Runway Gen-3", url: "https://runwayml.com", description: "AI video generation & advanced editing tools.", category: "Video", icon: "fas fa-video", featured: true },
-    { id: 6, name: "ElevenLabs", url: "https://elevenlabs.io", description: "Multilingual TTS, voice cloning for creators.", category: "Audio", icon: "fas fa-microphone-alt", featured: true },
-    { id: 7, name: "GitHub Copilot", url: "https://github.com/features/copilot", description: "AI pair programmer inside VS Code & IDE.", category: "Coding", icon: "fab fa-github", featured: true },
-    { id: 8, name: "Perplexity AI", url: "https://www.perplexity.ai", description: "AI search engine with real-time citations.", category: "LLM", icon: "fas fa-search", featured: false },
-    { id: 9, name: "Stable Diffusion 3", url: "https://stability.ai", description: "Cutting-edge open image synthesis model.", category: "Image", icon: "fas fa-draw-polygon", featured: false },
-    { id: 10, name: "Pika Labs 2.0", url: "https://pika.art", description: "Text-to-video with motion controls.", category: "Video", icon: "fas fa-film", featured: true },
-    { id: 11, name: "Descript", url: "https://www.descript.com", description: "Podcast & video editing AI (Overdub).", category: "Audio", icon: "fas fa-waveform", featured: false },
-    { id: 12, name: "Replit AI", url: "https://replit.com/ai", description: "AI coding & debugging inside browser IDE.", category: "Coding", icon: "fas fa-code", featured: false },
-    { id: 13, name: "Notion AI", url: "https://www.notion.so/product/ai", description: "AI-powered notes & docs assistant.", category: "Productivity", icon: "fas fa-file-alt", featured: true },
-    { id: 14, name: "Gamma AI", url: "https://gamma.app", description: "Generate stunning presentations & decks.", category: "Productivity", icon: "fas fa-chalkboard", featured: true },
-    { id: 15, name: "Leonardo.ai", url: "https://leonardo.ai", description: "Generative asset creation for games & art.", category: "Image", icon: "fas fa-brush", featured: false },
-    { id: 16, name: "HeyGen", url: "https://www.heygen.com", description: "AI avatar video translator & presenter.", category: "Video", icon: "fas fa-user-astronaut", featured: false },
-    { id: 17, name: "Whisper", url: "https://openai.com/research/whisper", description: "Robust speech recognition & transcription.", category: "Audio", icon: "fas fa-ear-listen", featured: false },
-    { id: 18, name: "Google Gemini", url: "https://gemini.google.com", description: "Multimodal AI from Google (Ultra 1.0).", category: "LLM", icon: "fab fa-google", featured: true },
-    { id: 19, name: "AutoGPT", url: "https://github.com/Significant-Gravitas/AutoGPT", description: "Autonomous task-solving agents.", category: "Coding", icon: "fas fa-robot", featured: false },
-    { id: 20, name: "Synthesia", url: "https://www.synthesia.io", description: "AI avatar videos from text.", category: "Video", icon: "fas fa-camera", featured: true },
-    { id: 21, name: "Otter.ai", url: "https://otter.ai", description: "Real-time meeting transcription & AI summaries.", category: "Productivity", icon: "fas fa-clipboard-list", featured: false },
-    { id: 22, name: "Jasper AI", url: "https://www.jasper.ai", description: "AI writing for marketing & teams.", category: "Productivity", icon: "fas fa-pen-fancy", featured: false },
-    { id: 23, name: "Krea AI", url: "https://www.krea.ai", description: "Real-time generative canvas & upscaling.", category: "Image", icon: "fas fa-magic", featured: false },
-    { id: 24, name: "Luma AI", url: "https://lumalabs.ai", description: "3D capture & NeRF video generation.", category: "Video", icon: "fas fa-cube", featured: true },
-    { id: 25, name: "Poe AI", url: "https://poe.com", description: "Unified access to Claude, ChatGPT, Gemini.", category: "LLM", icon: "fas fa-comment-dots", featured: false },
-    { id: 26, name: "Elicit", url: "https://elicit.com", description: "AI research assistant for literature review.", category: "Research", icon: "fas fa-flask", featured: true },
-    { id: 27, name: "Consensus", url: "https://consensus.app", description: "AI-powered search from scientific papers.", category: "Research", icon: "fas fa-graduation-cap", featured: false },
-    { id: 28, name: "Tabnine", url: "https://www.tabnine.com", description: "AI code completion & whole-line prediction.", category: "Coding", icon: "fas fa-laptop-code", featured: false },
-    { id: 29, name: "Mubert", url: "https://mubert.com", description: "AI generated royalty-free music.", category: "Audio", icon: "fas fa-music", featured: false },
-    { id: 30, name: "Fireflies.ai", url: "https://fireflies.ai", description: "Automated meeting notes & voice assistant.", category: "Productivity", icon: "fas fa-notes-medical", featured: false },
-    { id: 31, name: "DeepSeek", url: "https://chat.deepseek.com", description: "Powerful open-source coding LLM with 1M context.", category: "Coding", icon: "fas fa-microchip", featured: true },
-    { id: 32, name: "Ideogram", url: "https://ideogram.ai", description: "Typography & design-focused image AI.", category: "Image", icon: "fas fa-font", featured: false },
-    { id: 33, name: "Viggle AI", url: "https://viggle.ai", description: "Character animation & motion control video AI.", category: "Video", icon: "fas fa-person-running", featured: false },
-    { id: 34, name: "Soundraw", url: "https://soundraw.io", description: "AI music generation for creators.", category: "Audio", icon: "fas fa-headphones", featured: false },
-    { id: 35, name: "Phind", url: "https://phind.com", description: "AI search engine tailored for devs & research.", category: "Research", icon: "fas fa-brain", featured: false }
+    { id: 1, name: "ChatGPT", url: "https://chat.openai.com", description: "GPT-4o flagship model with multimodal capabilities", category: "LLM", icon: "fab fa-comments", featured: true },
+    { id: 2, name: "Claude 3.5", url: "https://claude.ai", description: "Advanced assistant with 200K context window and exceptional reasoning", category: "LLM", icon: "fas fa-brain", featured: true },
+    { id: 3, name: "Midjourney v6", url: "https://www.midjourney.com", description: "State-of-art AI image synthesis with photorealistic outputs", category: "Image", icon: "fas fa-palette", featured: true },
+    { id: 4, name: "DALL·E 3", url: "https://openai.com/dall-e-3", description: "High-fidelity text-to-image with GPT integration", category: "Image", icon: "fas fa-image", featured: true },
+    { id: 5, name: "Runway Gen-3", url: "https://runwayml.com", description: "Professional AI video generation and editing suite", category: "Video", icon: "fas fa-video", featured: true },
+    { id: 6, name: "ElevenLabs", url: "https://elevenlabs.io", description: "Multilingual TTS with natural voice cloning technology", category: "Audio", icon: "fas fa-microphone", featured: true },
+    { id: 7, name: "GitHub Copilot", url: "https://github.com/features/copilot", description: "AI pair programmer for VS Code and major IDEs", category: "Coding", icon: "fab fa-github", featured: true },
+    { id: 8, name: "Perplexity AI", url: "https://www.perplexity.ai", description: "Real-time search engine powered by advanced AI", category: "LLM", icon: "fas fa-magnifying-glass", featured: false },
+    { id: 9, name: "Stable Diffusion 3", url: "https://stability.ai", description: "Open-source image synthesis with improved text rendering", category: "Image", icon: "fas fa-wand-magic-sparkles", featured: false },
+    { id: 10, name: "Pika 2.0", url: "https://pika.art", description: "Text-to-video with advanced motion controls", category: "Video", icon: "fas fa-film", featured: true },
+    { id: 11, name: "Descript", url: "https://www.descript.com", description: "AI-powered podcast and video editing platform", category: "Audio", icon: "fas fa-scissors", featured: false },
+    { id: 12, name: "Replit AI", url: "https://replit.com/ai", description: "Real-time code generation inside browser IDE", category: "Coding", icon: "fas fa-laptop-code", featured: false },
+    { id: 13, name: "Notion AI", url: "https://www.notion.so/product/ai", description: "AI writing assistant integrated into Notion workspace", category: "Productivity", icon: "fas fa-pen", featured: true },
+    { id: 14, name: "Gamma AI", url: "https://gamma.app", description: "Generate beautiful presentations and decks instantly", category: "Productivity", icon: "fas fa-presentation", featured: true },
+    { id: 15, name: "Leonardo.ai", url: "https://leonardo.ai", description: "Generative AI for game assets and digital art", category: "Image", icon: "fas fa-paintbrush", featured: false },
+    { id: 16, name: "HeyGen", url: "https://www.heygen.com", description: "AI avatar videos with automated translation", category: "Video", icon: "fas fa-person", featured: false },
+    { id: 17, name: "Whisper", url: "https://openai.com/research/whisper", description: "Robust speech recognition for 99+ languages", category: "Audio", icon: "fas fa-ear-listen", featured: false },
+    { id: 18, name: "Google Gemini", url: "https://gemini.google.com", description: "Multimodal AI model from Google with advanced reasoning", category: "LLM", icon: "fab fa-google", featured: true },
+    { id: 19, name: "AutoGPT", url: "https://github.com/Significant-Gravitas/AutoGPT", description: "Autonomous task-solving agent framework", category: "Coding", icon: "fas fa-robot", featured: false },
+    { id: 20, name: "Synthesia", url: "https://www.synthesia.io", description: "Create professional videos with AI avatars", category: "Video", icon: "fas fa-video-camera", featured: true },
+    { id: 21, name: "Otter.ai", url: "https://otter.ai", description: "Real-time meeting transcription and AI summaries", category: "Productivity", icon: "fas fa-note-sticky", featured: false },
+    { id: 22, name: "Jasper AI", url: "https://www.jasper.ai", description: "AI writing platform for marketing and content teams", category: "Productivity", icon: "fas fa-pen-fancy", featured: false },
+    { id: 23, name: "Krea AI", url: "https://www.krea.ai", description: "Real-time generative canvas with AI upscaling", category: "Image", icon: "fas fa-magic", featured: false },
+    { id: 24, name: "Luma AI", url: "https://lumalabs.ai", description: "3D capture and neural rendering technology", category: "Video", icon: "fas fa-cube", featured: true },
+    { id: 25, name: "Poe AI", url: "https://poe.com", description: "Unified platform for multiple AI models", category: "LLM", icon: "fas fa-messages", featured: false },
+    { id: 26, name: "Elicit", url: "https://elicit.com", description: "AI research assistant for academic literature review", category: "Research", icon: "fas fa-flask", featured: true },
+    { id: 27, name: "Consensus", url: "https://consensus.app", description: "Search scientific papers with AI understanding", category: "Research", icon: "fas fa-graduation-cap", featured: false },
+    { id: 28, name: "Tabnine", url: "https://www.tabnine.com", description: "AI code completion trained on your codebase", category: "Coding", icon: "fas fa-code", featured: false },
+    { id: 29, name: "Mubert", url: "https://mubert.com", description: "AI-generated royalty-free music composition", category: "Audio", icon: "fas fa-music", featured: false },
+    { id: 30, name: "Fireflies.ai", url: "https://fireflies.ai", description: "Automated meeting notes and voice analysis", category: "Productivity", icon: "fas fa-recorder", featured: false },
+    { id: 31, name: "DeepSeek", url: "https://chat.deepseek.com", description: "Powerful coding LLM with 1M context window", category: "Coding", icon: "fas fa-microchip", featured: true },
+    { id: 32, name: "Ideogram", url: "https://ideogram.ai", description: "Typography and design-focused image generation", category: "Image", icon: "fas fa-font", featured: false },
+    { id: 33, name: "Viggle AI", url: "https://viggle.ai", description: "Character animation with advanced motion control", category: "Video", icon: "fas fa-person-walking", featured: false },
+    { id: 34, name: "Soundraw", url: "https://soundraw.io", description: "Royalty-free AI music generation platform", category: "Audio", icon: "fas fa-headphones", featured: false },
+    { id: 35, name: "Phind", url: "https://phind.com", description: "AI search engine optimized for developers", category: "Research", icon: "fas fa-terminal", featured: false }
   ];
 
-  // State variables
+  // ========== STATE & HELPERS ==========
   let currentCategory = "all";
   let currentSearch = "";
-
-  // Helper functions
-  function getTodayDateStr() {
-    return new Date().toISOString().slice(0,10);
-  }
 
   function getFilteredTools() {
     return masterAITools.filter(tool => {
@@ -269,11 +725,15 @@
     if (totalSpan) totalSpan.innerText = filtered.length;
 
     if (filtered.length === 0) {
-      gridContainer.innerHTML = `<div class="col-span-full flex flex-col items-center gap-3 glass-panel p-12">
-        <i class="fas fa-ghost text-5xl text-blue-400/60"></i>
-        <h3 class="text-xl">No AI resources found</h3>
-        <p class="text-gray-300">Try different keywords or category ✨</p>
-      </div>`;
+      gridContainer.innerHTML = `
+        <div style="grid-column: 1/-1;" class="empty-state">
+          <div class="empty-state-icon">
+            <i class="fas fa-search"></i>
+          </div>
+          <h3 class="empty-state-title">No Results Found</h3>
+          <p class="empty-state-text">Try different keywords or adjust your filters</p>
+        </div>
+      `;
       return;
     }
 
@@ -286,62 +746,64 @@
       }
       
       return `
-        <div class="glass-card p-5 flex flex-col h-full transition-all">
-          <div class="flex justify-between items-start">
-            <div class="flex gap-3 items-center">
-              <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600/30 to-indigo-600/30 flex items-center justify-center text-blue-300 border border-blue-500/40">
-                <i class="${tool.icon || 'fas fa-microchip'} text-xl"></i>
-              </div>
-              <div>
-                <div class="flex items-center gap-2 flex-wrap">
-                  <h3 class="font-bold text-md md:text-lg">${tool.name}</h3>
-                  ${tool.featured ? '<span class="live-badge bg-amber-600/70 text-[10px]">⭐ featured</span>' : ''}
-                </div>
-                <p class="text-xs text-blue-200/60">${tool.category}</p>
-              </div>
+        <div class="glass-card p-6 flex flex-col h-full">
+          <div class="tool-card-header">
+            <div class="tool-icon-wrapper">
+              <i class="${tool.icon || 'fas fa-star'} text-2xl"></i>
             </div>
-            <a href="${tool.url}" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:text-white transition"><i class="fas fa-external-link-alt text-sm"></i></a>
+            <div class="tool-info">
+              <div class="tool-name">
+                ${tool.name}
+                ${tool.featured ? '<span class="featured-badge">⭐ Featured</span>' : ''}
+              </div>
+              <div class="tool-category">${tool.category}</div>
+            </div>
+            <a href="${tool.url}" target="_blank" rel="noopener noreferrer" class="tool-external-link">
+              <i class="fas fa-arrow-up-right-from-square"></i>
+            </a>
           </div>
-          <p class="mt-3 text-gray-200 text-sm leading-relaxed flex-grow">${tool.description}</p>
-          <div class="mt-4 flex justify-between items-center pt-2 border-t border-white/10">
-            <span class="text-[11px] text-blue-300/60 font-mono">${hostname}</span>
-            <a href="${tool.url}" target="_blank" class="text-xs bg-blue-700/40 hover:bg-blue-600 px-3 py-1.5 rounded-full flex items-center gap-1 transition">Launch <i class="fas fa-arrow-right text-[9px]"></i></a>
+          <p class="tool-description">${tool.description}</p>
+          <div class="tool-footer">
+            <span class="tool-hostname">${hostname}</span>
+            <a href="${tool.url}" target="_blank" class="tool-launch-btn">
+              Launch <i class="fas fa-arrow-right"></i>
+            </a>
           </div>
         </div>
       `;
     }).join('');
   }
 
-  // Add new tool function
-  function addCommunityTool() {
-    const newToolNames = ["Hugging Face Chat", "Cohere Coral", "Recraft AI", "Kaiber", "WellSaid", "Codium AI", "Typeface"];
-    const randomName = newToolNames[Math.floor(Math.random() * newToolNames.length)];
-    const categoriesList = ["LLM", "Image", "Video", "Audio", "Coding", "Productivity", "Research"];
-    const randomCat = categoriesList[Math.floor(Math.random() * categoriesList.length)];
-    const randomDesc = `Innovative AI tool for ${randomCat} domain — discovered via community share.`;
-    
-    const newTool = {
-      id: masterAITools.length + Date.now(),
-      name: `${randomName}`,
-      url: `https://${randomName.toLowerCase().replace(/\s/g, '')}.ai`,
-      description: randomDesc,
-      category: randomCat,
-      icon: "fas fa-cloud-arrow-up",
-      featured: false
-    };
-    
-    masterAITools.push(newTool);
-    renderDashboard();
-    
-    // Show notification
+  function showToast(message, icon = "fas fa-check-circle", color = "text-emerald-400") {
     const toast = document.createElement("div");
-    toast.className = "fixed bottom-5 right-5 glass-panel px-4 py-2 text-sm z-50";
-    toast.innerHTML = `<i class="fas fa-plus-circle text-emerald-400 mr-2"></i> New tool "${randomName}" added!`;
+    toast.className = "toast";
+    toast.innerHTML = `<i class="${icon} ${color}"></i> ${message}`;
     document.body.appendChild(toast);
     setTimeout(() => toast.remove(), 3000);
   }
 
-  // Initialize event listeners
+  function addCommunityTool() {
+    const newToolNames = ["Hugging Face Chat", "Cohere Command", "Recraft AI", "Kaiber Studio", "WellSaid Labs", "Codium AI", "Typeface"];
+    const randomName = newToolNames[Math.floor(Math.random() * newToolNames.length)];
+    const categoriesList = ["LLM", "Image", "Video", "Audio", "Coding", "Productivity", "Research"];
+    const randomCat = categoriesList[Math.floor(Math.random() * categoriesList.length)];
+    
+    const newTool = {
+      id: masterAITools.length + Date.now(),
+      name: randomName,
+      url: `https://${randomName.toLowerCase().replace(/\s/g, '')}.ai`,
+      description: `Innovative AI tool for ${randomCat} — community contributed`,
+      category: randomCat,
+      icon: "fas fa-plus",
+      featured: false
+    };
+    
+    masterAITools.unshift(newTool);
+    renderDashboard();
+    showToast(`"${randomName}" added to dashboard!`, "fas fa-rocket", "text-blue-400");
+  }
+
+  // ========== EVENT LISTENERS ==========
   function initEventListeners() {
     const searchBox = document.getElementById("globalSearch");
     const categorySelect = document.getElementById("categorySelector");
@@ -355,15 +817,12 @@
         renderDashboard(); 
       });
     }
-if (categorySelect) {
+
+    if (categorySelect) {
       categorySelect.addEventListener("change", (e) => { 
         currentCategory = e.target.value;
         catPills.forEach(btn => { 
-          if(btn.getAttribute("data-cat") === currentCategory) {
-            btn.classList.add("active"); 
-          } else {
-            btn.classList.remove("active");
-          }
+          btn.classList.toggle("active", btn.getAttribute("data-cat") === currentCategory);
         });
         renderDashboard();
       });
@@ -381,12 +840,10 @@ if (categorySelect) {
     
     if (refreshBtn) {
       refreshBtn.addEventListener("click", () => {
+        refreshBtn.style.animation = "none";
+        setTimeout(() => refreshBtn.style.animation = "", 10);
         renderDashboard();
-        const toast = document.createElement("div");
-        toast.className = "fixed bottom-5 right-5 glass-panel px-4 py-2 text-sm z-50";
-        toast.innerHTML = `<i class="fas fa-check-circle text-emerald-400 mr-2"></i> Dashboard refreshed! ${masterAITools.length} tools available`;
-        document.body.appendChild(toast);
-        setTimeout(() => toast.remove(), 2000);
+        showToast(`Dashboard refreshed! ${masterAITools.length} tools available`, "fas fa-sync-alt", "text-cyan-400");
       });
     }
     
@@ -395,31 +852,30 @@ if (categorySelect) {
     }
   }
 
-  // Set dynamic date
   function setDynamicDate() {
     const now = new Date();
+    const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
     const dateElem = document.getElementById("dynamicDate");
     if (dateElem) {
-      dateElem.innerHTML = now.toLocaleDateString(undefined, { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' });
+      dateElem.innerHTML = now.toLocaleDateString(undefined, options);
     }
     const lastUpdateElem = document.getElementById("lastUpdateTime");
     if (lastUpdateElem) {
-      lastUpdateElem.innerHTML = now.toLocaleDateString();
+      const dateStr = now.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+      lastUpdateElem.innerHTML = dateStr;
     }
     const newTodayElem = document.getElementById("newTodayBadge");
     if (newTodayElem) {
-      newTodayElem.innerHTML = `${Math.floor(Math.random() * 5)} new today ✨`;
+      newTodayElem.innerHTML = `${Math.floor(Math.random() * 5) + 1}`;
     }
   }
 
-  // Initialize everything
   function init() {
     renderDashboard();
     initEventListeners();
     setDynamicDate();
   }
   
-  // Start the app
   init();
 </script>
 </body>
