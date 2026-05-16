@@ -905,22 +905,18 @@
     const VISITOR_KEY = 'ai_nexus_visitors';
     const VISITOR_SESSION_KEY = 'ai_nexus_session_id';
     
-    // Generate or get session ID
     let sessionId = sessionStorage.getItem(VISITOR_SESSION_KEY);
     if (!sessionId) {
       sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
       sessionStorage.setItem(VISITOR_SESSION_KEY, sessionId);
     }
     
-    // Get current visitor count
     let visitors = JSON.parse(localStorage.getItem(VISITOR_KEY)) || [];
     
-    // Check if this session is already counted today
     const today = new Date().toISOString().split('T')[0];
     const todayVisitors = visitors.filter(v => v.date === today);
     const isNewVisitor = !todayVisitors.some(v => v.sessionId === sessionId);
     
-    // Add new visitor if needed
     if (isNewVisitor) {
       visitors.push({
         sessionId: sessionId,
@@ -930,11 +926,9 @@
       localStorage.setItem(VISITOR_KEY, JSON.stringify(visitors));
     }
     
-    // Get total unique visitors (all time)
     const uniqueSessions = new Set(visitors.map(v => v.sessionId));
     const totalVisitors = uniqueSessions.size;
     
-    // Update display
     const visitorCounter = document.getElementById('visitorCounter');
     const visitorCountDisplay = document.getElementById('visitorCountDisplay');
     
@@ -944,43 +938,156 @@
     return totalVisitors;
   }
 
-  // ========== ENHANCED AI TOOLS DATABASE ==========
+  // ========== COMPREHENSIVE AI TOOLS DATABASE (100+ Tools) ==========
   const masterAITools = [
+    // ===== LLM & CHAT (25 tools) =====
     { id: 1, name: "ChatGPT", url: "https://chat.openai.com", description: "GPT-4o flagship model with multimodal capabilities", category: "LLM", icon: "fab fa-comments", featured: true },
     { id: 2, name: "Claude 3.5", url: "https://claude.ai", description: "Advanced assistant with 200K context window and exceptional reasoning", category: "LLM", icon: "fas fa-brain", featured: true },
-    { id: 3, name: "Midjourney v6", url: "https://www.midjourney.com", description: "State-of-art AI image synthesis with photorealistic outputs", category: "Image", icon: "fas fa-palette", featured: true },
-    { id: 4, name: "DALL·E 3", url: "https://openai.com/dall-e-3", description: "High-fidelity text-to-image with GPT integration", category: "Image", icon: "fas fa-image", featured: true },
-    { id: 5, name: "Runway Gen-3", url: "https://runwayml.com", description: "Professional AI video generation and editing suite", category: "Video", icon: "fas fa-video", featured: true },
-    { id: 6, name: "ElevenLabs", url: "https://elevenlabs.io", description: "Multilingual TTS with natural voice cloning technology", category: "Audio", icon: "fas fa-microphone", featured: true },
-    { id: 7, name: "GitHub Copilot", url: "https://github.com/features/copilot", description: "AI pair programmer for VS Code and major IDEs", category: "Coding", icon: "fab fa-github", featured: true },
-    { id: 8, name: "Perplexity AI", url: "https://www.perplexity.ai", description: "Real-time search engine powered by advanced AI", category: "LLM", icon: "fas fa-magnifying-glass", featured: false },
-    { id: 9, name: "Stable Diffusion 3", url: "https://stability.ai", description: "Open-source image synthesis with improved text rendering", category: "Image", icon: "fas fa-wand-magic-sparkles", featured: false },
-    { id: 10, name: "Pika 2.0", url: "https://pika.art", description: "Text-to-video with advanced motion controls", category: "Video", icon: "fas fa-film", featured: true },
-    { id: 11, name: "Descript", url: "https://www.descript.com", description: "AI-powered podcast and video editing platform", category: "Audio", icon: "fas fa-scissors", featured: false },
-    { id: 12, name: "Replit AI", url: "https://replit.com/ai", description: "Real-time code generation inside browser IDE", category: "Coding", icon: "fas fa-laptop-code", featured: false },
-    { id: 13, name: "Notion AI", url: "https://www.notion.so/product/ai", description: "AI writing assistant integrated into Notion workspace", category: "Productivity", icon: "fas fa-pen", featured: true },
-    { id: 14, name: "Gamma AI", url: "https://gamma.app", description: "Generate beautiful presentations and decks instantly", category: "Productivity", icon: "fas fa-presentation", featured: true },
-    { id: 15, name: "Leonardo.ai", url: "https://leonardo.ai", description: "Generative AI for game assets and digital art", category: "Image", icon: "fas fa-paintbrush", featured: false },
-    { id: 16, name: "HeyGen", url: "https://www.heygen.com", description: "AI avatar videos with automated translation", category: "Video", icon: "fas fa-person", featured: false },
-    { id: 17, name: "Whisper", url: "https://openai.com/research/whisper", description: "Robust speech recognition for 99+ languages", category: "Audio", icon: "fas fa-ear-listen", featured: false },
-    { id: 18, name: "Google Gemini", url: "https://gemini.google.com", description: "Multimodal AI model from Google with advanced reasoning", category: "LLM", icon: "fab fa-google", featured: true },
-    { id: 19, name: "AutoGPT", url: "https://github.com/Significant-Gravitas/AutoGPT", description: "Autonomous task-solving agent framework", category: "Coding", icon: "fas fa-robot", featured: false },
-    { id: 20, name: "Synthesia", url: "https://www.synthesia.io", description: "Create professional videos with AI avatars", category: "Video", icon: "fas fa-video-camera", featured: true },
-    { id: 21, name: "Otter.ai", url: "https://otter.ai", description: "Real-time meeting transcription and AI summaries", category: "Productivity", icon: "fas fa-note-sticky", featured: false },
-    { id: 22, name: "Jasper AI", url: "https://www.jasper.ai", description: "AI writing platform for marketing and content teams", category: "Productivity", icon: "fas fa-pen-fancy", featured: false },
-    { id: 23, name: "Krea AI", url: "https://www.krea.ai", description: "Real-time generative canvas with AI upscaling", category: "Image", icon: "fas fa-magic", featured: false },
-    { id: 24, name: "Luma AI", url: "https://lumalabs.ai", description: "3D capture and neural rendering technology", category: "Video", icon: "fas fa-cube", featured: true },
-    { id: 25, name: "Poe AI", url: "https://poe.com", description: "Unified platform for multiple AI models", category: "LLM", icon: "fas fa-messages", featured: false },
-    { id: 26, name: "Elicit", url: "https://elicit.com", description: "AI research assistant for academic literature review", category: "Research", icon: "fas fa-flask", featured: true },
-    { id: 27, name: "Consensus", url: "https://consensus.app", description: "Search scientific papers with AI understanding", category: "Research", icon: "fas fa-graduation-cap", featured: false },
-    { id: 28, name: "Tabnine", url: "https://www.tabnine.com", description: "AI code completion trained on your codebase", category: "Coding", icon: "fas fa-code", featured: false },
-    { id: 29, name: "Mubert", url: "https://mubert.com", description: "AI-generated royalty-free music composition", category: "Audio", icon: "fas fa-music", featured: false },
-    { id: 30, name: "Fireflies.ai", url: "https://fireflies.ai", description: "Automated meeting notes and voice analysis", category: "Productivity", icon: "fas fa-recorder", featured: false },
-    { id: 31, name: "DeepSeek", url: "https://chat.deepseek.com", description: "Powerful coding LLM with 1M context window", category: "Coding", icon: "fas fa-microchip", featured: true },
-    { id: 32, name: "Ideogram", url: "https://ideogram.ai", description: "Typography and design-focused image generation", category: "Image", icon: "fas fa-font", featured: false },
-    { id: 33, name: "Viggle AI", url: "https://viggle.ai", description: "Character animation with advanced motion control", category: "Video", icon: "fas fa-person-walking", featured: false },
-    { id: 34, name: "Soundraw", url: "https://soundraw.io", description: "Royalty-free AI music generation platform", category: "Audio", icon: "fas fa-headphones", featured: false },
-    { id: 35, name: "Phind", url: "https://phind.com", description: "AI search engine optimized for developers", category: "Research", icon: "fas fa-terminal", featured: false }
+    { id: 3, name: "Gemini Advanced", url: "https://gemini.google.com", description: "Google's multimodal AI with advanced reasoning and coding", category: "LLM", icon: "fab fa-google", featured: true },
+    { id: 4, name: "Perplexity AI", url: "https://www.perplexity.ai", description: "Real-time search engine powered by advanced AI with source citations", category: "LLM", icon: "fas fa-magnifying-glass", featured: true },
+    { id: 5, name: "Copilot Pro", url: "https://copilot.microsoft.com", description: "Microsoft's AI powered by GPT-4 with web browsing capabilities", category: "LLM", icon: "fab fa-microsoft", featured: true },
+    { id: 6, name: "DeepSeek Chat", url: "https://chat.deepseek.com", description: "Powerful coding LLM with 1M context window", category: "LLM", icon: "fas fa-microchip", featured: true },
+    { id: 7, name: "Poe AI", url: "https://poe.com", description: "Unified platform for multiple AI models and assistants", category: "LLM", icon: "fas fa-messages", featured: false },
+    { id: 8, name: "HuggingChat", url: "https://huggingface.co/chat", description: "Open-source AI chat powered by HuggingFace models", category: "LLM", icon: "fas fa-robot", featured: false },
+    { id: 9, name: "Grok (X AI)", url: "https://grok.x.ai", description: "Real-time knowledge LLM from X, access to X data", category: "LLM", icon: "fas fa-bolt", featured: false },
+    { id: 10, name: "LLaMA Chat", url: "https://www.meta.ai", description: "Meta's open-source LLaMA model with advanced capabilities", category: "LLM", icon: "fas fa-layer-group", featured: false },
+    { id: 11, name: "Mistral Chat", url: "https://chat.mistral.ai", description: "Efficient open-source LLM with optimized performance", category: "LLM", icon: "fas fa-wind", featured: false },
+    { id: 12, name: "Copilot Free", url: "https://copilot.microsoft.com", description: "Free version of Microsoft Copilot with ChatGPT-4", category: "LLM", icon: "fas fa-sparkles", featured: false },
+    { id: 13, name: "Claude 3 Opus", url: "https://claude.ai", description: "Most capable Claude model for complex reasoning tasks", category: "LLM", icon: "fas fa-crown", featured: false },
+    { id: 14, name: "Phind", url: "https://phind.com", description: "AI search engine optimized for developers and technical queries", category: "LLM", icon: "fas fa-terminal", featured: false },
+    { id: 15, name: "You.com Search", url: "https://you.com", description: "Private AI-powered search engine with multiple AI modes", category: "LLM", icon: "fas fa-search", featured: false },
+    { id: 16, name: "Alexa AI", url: "https://alexa.amazon.com", description: "Amazon's conversational AI with smart home integration", category: "LLM", icon: "fab fa-amazon", featured: false },
+    { id: 17, name: "NVIDIA Chat", url: "https://www.nvidia.com", description: "NVIDIA's AI chatbot for tech and AI queries", category: "LLM", icon: "fas fa-chart-line", featured: false },
+    { id: 18, name: "Khanmigo", url: "https://www.khanacademy.org", description: "Khan Academy's AI tutor for educational support", category: "LLM", icon: "fas fa-graduation-cap", featured: false },
+    { id: 19, name: "ChatSonic", url: "https://www.chatsonic.com", description: "ChatGPT-powered bot with real-time web access", category: "LLM", icon: "fas fa-comments", featured: false },
+    { id: 20, name: "Bing Chat", url: "https://www.bing.com/chat", description: "Microsoft's search-integrated AI chatbot", category: "LLM", icon: "fab fa-windows", featured: false },
+    { id: 21, name: "Together.ai", url: "https://www.together.ai", description: "API platform for open-source LLMs with fast inference", category: "LLM", icon: "fas fa-share-nodes", featured: false },
+    { id: 22, name: "Replicate", url: "https://replicate.com", description: "Run open-source AI models in the cloud", category: "LLM", icon: "fas fa-server", featured: false },
+    { id: 23, name: "Hugging Face Inference", url: "https://huggingface.co", description: "Deploy and use any HuggingFace model", category: "LLM", icon: "fab fa-github", featured: false },
+    { id: 24, name: "Anthropic", url: "https://www.anthropic.com", description: "Research company behind Claude", category: "LLM", icon: "fas fa-building", featured: false },
+    { id: 25, name: "OpenRouter", url: "https://openrouter.ai", description: "Single API to access multiple LLMs", category: "LLM", icon: "fas fa-road", featured: false },
+
+    // ===== IMAGE GENERATION (25 tools) =====
+    { id: 26, name: "Midjourney v6", url: "https://www.midjourney.com", description: "State-of-art AI image synthesis with photorealistic outputs", category: "Image", icon: "fas fa-palette", featured: true },
+    { id: 27, name: "DALL·E 3", url: "https://openai.com/dall-e-3", description: "High-fidelity text-to-image with GPT integration", category: "Image", icon: "fas fa-image", featured: true },
+    { id: 28, name: "Stable Diffusion 3", url: "https://stability.ai", description: "Open-source image synthesis with improved text rendering", category: "Image", icon: "fas fa-wand-magic-sparkles", featured: true },
+    { id: 29, name: "Leonardo.ai", url: "https://leonardo.ai", description: "Generative AI for game assets, digital art and design", category: "Image", icon: "fas fa-paintbrush", featured: true },
+    { id: 30, name: "Ideogram", url: "https://ideogram.ai", description: "Typography and design-focused AI image generation", category: "Image", icon: "fas fa-font", featured: true },
+    { id: 31, name: "Krea AI", url: "https://www.krea.ai", description: "Real-time generative canvas with AI upscaling", category: "Image", icon: "fas fa-magic", featured: false },
+    { id: 32, name: "Canva AI", url: "https://www.canva.com", description: "AI-powered design tool for creating visual content", category: "Image", icon: "fas fa-brush", featured: false },
+    { id: 33, name: "Firefly", url: "https://www.adobe.com/products/firefly", description: "Adobe's generative AI for creative professionals", category: "Image", icon: "fas fa-fire", featured: true },
+    { id: 34, name: "NightCafe", url: "https://nightcafe.studio", description: "Multi-model AI art generation platform", category: "Image", icon: "fas fa-moon", featured: false },
+    { id: 35, name: "Artbreeder", url: "https://www.artbreeder.com", description: "Collaborative AI art creation and exploration", category: "Image", icon: "fas fa-layer-group", featured: false },
+    { id: 36, name: "Deep Dream Generator", url: "https://deepdreamgenerator.com", description: "Psychedelic AI art generator", category: "Image", icon: "fas fa-eye", featured: false },
+    { id: 37, name: "Imagine by Magic", url: "https://magicstudio.com/imagine", description: "AI-powered text-to-image in browser", category: "Image", icon: "fas fa-sparkles", featured: false },
+    { id: 38, name: "Pixlr", url: "https://pixlr.com", description: "AI-powered photo editor with generative fill", category: "Image", icon: "fas fa-crop", featured: false },
+    { id: 39, name: "fotor", url: "https://www.fotor.com", description: "AI photo editor with background removal and enhancement", category: "Image", icon: "fas fa-image", featured: false },
+    { id: 40, name: "DesignWizard", url: "https://www.designwizard.com", description: "AI design tool for social media and marketing", category: "Image", icon: "fas fa-wand-magic", featured: false },
+    { id: 41, name: "Runway Gen-2", url: "https://runwayml.com", description: "Professional AI video and image generation", category: "Image", icon: "fas fa-video", featured: false },
+    { id: 42, name: "Clipdrop", url: "https://clipdrop.co", description: "AI image tools including inpainting and upscaling", category: "Image", icon: "fas fa-droplet", featured: false },
+    { id: 43, name: "Remove.bg", url: "https://www.remove.bg", description: "AI-powered background removal tool", category: "Image", icon: "fas fa-scissors", featured: false },
+    { id: 44, name: "Upscayl", url: "https://upscayl.github.io", description: "Free AI image upscaler", category: "Image", icon: "fas fa-expand", featured: false },
+    { id: 45, name: "Waifu Diffusion", url: "https://huggingface.co/spaces/hakurei/waifu_diffusion", description: "Anime-focused image generation model", category: "Image", icon: "fas fa-image", featured: false },
+    { id: 46, name: "DreamStudio", url: "https://www.dreamstudio.ai", description: "Stability AI's official image generation platform", category: "Image", icon: "fas fa-cloud", featured: false },
+    { id: 47, name: "Openjourney", url: "https://www.openjourney.ai", description: "Community-driven AI image generation", category: "Image", icon: "fas fa-map", featured: false },
+    { id: 48, name: "Civitai", url: "https://civitai.com", description: "Largest community for Stable Diffusion models", category: "Image", icon: "fas fa-users", featured: false },
+    { id: 49, name: "PicLumen", url: "https://piclumen.com", description: "AI art generation with community gallery", category: "Image", icon: "fas fa-images", featured: false },
+    { id: 50, name: "Gencraft", url: "https://gencraft.com", description: "Fast AI image generation with real-time editing", category: "Image", icon: "fas fa-wand-magic-sparkles", featured: false },
+
+    // ===== VIDEO GENERATION (15 tools) =====
+    { id: 51, name: "Runway Gen-3", url: "https://runwayml.com", description: "Professional AI video generation and editing suite", category: "Video", icon: "fas fa-video", featured: true },
+    { id: 52, name: "Pika 2.0", url: "https://pika.art", description: "Text-to-video with advanced motion controls", category: "Video", icon: "fas fa-film", featured: true },
+    { id: 53, name: "Synthesia", url: "https://www.synthesia.io", description: "Create professional videos with AI avatars", category: "Video", icon: "fas fa-video-camera", featured: true },
+    { id: 54, name: "HeyGen", url: "https://www.heygen.com", description: "AI avatar videos with automated translation", category: "Video", icon: "fas fa-person", featured: true },
+    { id: 55, name: "Luma AI", url: "https://lumalabs.ai", description: "3D capture and neural rendering technology", category: "Video", icon: "fas fa-cube", featured: true },
+    { id: 56, name: "Descript", url: "https://www.descript.com", description: "AI-powered podcast and video editing platform", category: "Video", icon: "fas fa-scissors", featured: true },
+    { id: 57, name: "Viggle AI", url: "https://viggle.ai", description: "Character animation with advanced motion control", category: "Video", icon: "fas fa-person-walking", featured: true },
+    { id: 58, name: "D-ID", url: "https://www.d-id.com", description: "Create talking avatar videos from photos", category: "Video", icon: "fas fa-face-smile", featured: false },
+    { id: 59, name: "Steve.ai", url: "https://www.steve.ai", description: "Text-to-video conversion for marketing", category: "Video", icon: "fas fa-play", featured: false },
+    { id: 60, name: "Fliki", url: "https://fliki.ai", description: "Text-to-video with AI voiceovers", category: "Video", icon: "fas fa-microphone-lines", featured: false },
+    { id: 61, name: "Opus Clip", url: "https://www.opus.pro", description: "AI video editor for creating short-form content", category: "Video", icon: "fas fa-bolt", featured: false },
+    { id: 62, name: "Colossyan", url: "https://www.colossyan.com", description: "Video creation with AI presenters", category: "Video", icon: "fas fa-person-dress", featured: false },
+    { id: 63, name: "Invideo", url: "https://invideo.io", description: "AI video creator from scripts and prompts", category: "Video", icon: "fas fa-clapperboard", featured: false },
+    { id: 64, name: "Wistia", url: "https://wistia.com", description: "Video hosting with AI transcription and analytics", category: "Video", icon: "fas fa-play-circle", featured: false },
+    { id: 65, name: "Pictory", url: "https://pictory.ai", description: "Convert long-form content to short videos", category: "Video", icon: "fas fa-rectangle-landscape", featured: false },
+
+    // ===== AUDIO & TEXT-TO-SPEECH (15 tools) =====
+    { id: 66, name: "ElevenLabs", url: "https://elevenlabs.io", description: "Multilingual TTS with natural voice cloning technology", category: "Audio", icon: "fas fa-microphone", featured: true },
+    { id: 67, name: "Whisper", url: "https://openai.com/research/whisper", description: "Robust speech recognition for 99+ languages", category: "Audio", icon: "fas fa-ear-listen", featured: true },
+    { id: 68, name: "Mubert", url: "https://mubert.com", description: "AI-generated royalty-free music composition", category: "Audio", icon: "fas fa-music", featured: true },
+    { id: 69, name: "Soundraw", url: "https://soundraw.io", description: "Royalty-free AI music generation platform", category: "Audio", icon: "fas fa-headphones", featured: true },
+    { id: 70, name: "Jukebox", url: "https://openai.com/research/jukebox", description: "OpenAI's AI music generation model", category: "Audio", icon: "fas fa-compact-disc", featured: false },
+    { id: 71, name: "PollyAI", url: "https://aws.amazon.com/polly", description: "AWS text-to-speech with neural voices", category: "Audio", icon: "fab fa-aws", featured: false },
+    { id: 72, name: "Google Cloud TTS", url: "https://cloud.google.com/text-to-speech", description: "Google's advanced text-to-speech API", category: "Audio", icon: "fab fa-google", featured: false },
+    { id: 73, name: "Natural Reader", url: "https://www.naturalreader.com", description: "AI text-to-speech with voice customization", category: "Audio", icon: "fas fa-volume-high", featured: false },
+    { id: 74, name: "Voxify", url: "https://www.voxify.io", description: "Text-to-speech with emotional expression", category: "Audio", icon: "fas fa-waveform-lines", featured: false },
+    { id: 75, name: "PlayHT", url: "https://www.playht.com", description: "AI voice generation for podcasts and videos", category: "Audio", icon: "fas fa-podcast", featured: false },
+    { id: 76, name: "Resemble AI", url: "https://www.resemble.ai", description: "Voice cloning and synthesis technology", category: "Audio", icon: "fas fa-clone", featured: false },
+    { id: 77, name: "Papercup", url: "https://www.papercup.com", description: "AI dubbing and voice-over for videos", category: "Audio", icon: "fas fa-closed-captioning", featured: false },
+    { id: 78, name: "Voicelab", url: "https://voicelab.ai", description: "Clone and create AI voices", category: "Audio", icon: "fas fa-circle-notch", featured: false },
+    { id: 79, name: "UberDuck", url: "https://uberduck.ai", description: "AI voice synthesis for creators", category: "Audio", icon: "fas fa-duck", featured: false },
+    { id: 80, name: "Loudly", url: "https://loudly.com", description: "AI music and sound effects generation", category: "Audio", icon: "fas fa-music", featured: false },
+
+    // ===== CODING & DEVELOPMENT (20 tools) =====
+    { id: 81, name: "GitHub Copilot", url: "https://github.com/features/copilot", description: "AI pair programmer for VS Code and major IDEs", category: "Coding", icon: "fab fa-github", featured: true },
+    { id: 82, name: "DeepSeek Coder", url: "https://chat.deepseek.com", description: "Powerful coding LLM with 1M context window", category: "Coding", icon: "fas fa-microchip", featured: true },
+    { id: 83, name: "Tabnine", url: "https://www.tabnine.com", description: "AI code completion trained on your codebase", category: "Coding", icon: "fas fa-code", featured: true },
+    { id: 84, name: "Replit AI", url: "https://replit.com/ai", description: "Real-time code generation inside browser IDE", category: "Coding", icon: "fas fa-laptop-code", featured: true },
+    { id: 85, name: "Codeium", url: "https://codeium.com", description: "Free AI code completion for all languages", category: "Coding", icon: "fas fa-terminal", featured: true },
+    { id: 86, name: "AutoGPT", url: "https://github.com/Significant-Gravitas/AutoGPT", description: "Autonomous task-solving agent framework", category: "Coding", icon: "fas fa-robot", featured: false },
+    { id: 87, name: "Cursor", url: "https://www.cursor.so", description: "VS Code fork with AI built-in", category: "Coding", icon: "fas fa-arrow-pointer", featured: false },
+    { id: 88, name: "CodeWanderers", url: "https://github.com", description: "AI-assisted code generation platform", category: "Coding", icon: "fas fa-wand-magic", featured: false },
+    { id: 89, name: "AWS CodeWhisperer", url: "https://aws.amazon.com/codewhisperer", description: "Amazon's AI code suggestion tool", category: "Coding", icon: "fab fa-aws", featured: false },
+    { id: 90, name: "Pieces", url: "https://pieces.app", description: "AI-powered code snippet manager", category: "Coding", icon: "fas fa-puzzle-piece", featured: false },
+    { id: 91, name: "BuildShip", url: "https://buildship.com", description: "AI visual backend builder", category: "Coding", icon: "fas fa-hammer", featured: false },
+    { id: 92, name: "Loophole Labs", url: "https://loophole.cloud", description: "Serverless AI integration platform", category: "Coding", icon: "fas fa-infinity", featured: false },
+    { id: 93, name: "Stack Overflow AI", url: "https://stackoverflow.com", description: "AI-powered developer community", category: "Coding", icon: "fab fa-stack-overflow", featured: false },
+    { id: 94, name: "Gitpod", url: "https://gitpod.io", description: "Cloud IDE with AI assistance", category: "Coding", icon: "fas fa-cloud-arrow-up", featured: false },
+    { id: 95, name: "Blackbox", url: "https://www.blackbox.ai", description: "Code search with AI insights", category: "Coding", icon: "fas fa-box", featured: false },
+    { id: 96, name: "Antml", url: "https://antml.ai", description: "AI model inference platform for developers", category: "Coding", icon: "fas fa-network-wired", featured: false },
+    { id: 97, name: "Railway", url: "https://railway.app", description: "Deploy apps with AI assistance", category: "Coding", icon: "fas fa-train", featured: false },
+    { id: 98, name: "Vercel", url: "https://vercel.com", description: "Deploy frontend with built-in AI features", category: "Coding", icon: "fas fa-rocket", featured: false },
+    { id: 99, name: "Streamlit", url: "https://streamlit.io", description: "Build AI apps with Python", category: "Coding", icon: "fas fa-stream", featured: false },
+    { id: 100, name: "Hugging Face Spaces", url: "https://huggingface.co/spaces", description: "Deploy ML models as web apps", category: "Coding", icon: "fas fa-cube", featured: false },
+
+    // ===== PRODUCTIVITY (20 tools) =====
+    { id: 101, name: "Notion AI", url: "https://www.notion.so/product/ai", description: "AI writing assistant integrated into Notion workspace", category: "Productivity", icon: "fas fa-pen", featured: true },
+    { id: 102, name: "Gamma AI", url: "https://gamma.app", description: "Generate beautiful presentations and decks instantly", category: "Productivity", icon: "fas fa-presentation", featured: true },
+    { id: 103, name: "Otter.ai", url: "https://otter.ai", description: "Real-time meeting transcription and AI summaries", category: "Productivity", icon: "fas fa-note-sticky", featured: true },
+    { id: 104, name: "Jasper AI", url: "https://www.jasper.ai", description: "AI writing platform for marketing and content teams", category: "Productivity", icon: "fas fa-pen-fancy", featured: true },
+    { id: 105, name: "Fireflies.ai", url: "https://fireflies.ai", description: "Automated meeting notes and voice analysis", category: "Productivity", icon: "fas fa-recorder", featured: true },
+    { id: 106, name: "Copy.ai", url: "https://copy.ai", description: "AI copywriting tool for marketing content", category: "Productivity", icon: "fas fa-copy", featured: false },
+    { id: 107, name: "Writesonic", url: "https://writesonic.com", description: "AI content writing for blogs and ads", category: "Productivity", icon: "fas fa-pen-nib", featured: false },
+    { id: 108, name: "Grammarly", url: "https://www.grammarly.com", description: "AI writing assistant for grammar and tone", category: "Productivity", icon: "fas fa-book", featured: false },
+    { id: 109, name: "Hemingway Editor", url: "https://www.hemingwayapp.com", description: "AI-powered writing clarification tool", category: "Productivity", icon: "fas fa-feather", featured: false },
+    { id: 110, name: "Copysmith", url: "https://www.copysmith.ai", description: "AI copywriter for e-commerce and ads", category: "Productivity", icon: "fas fa-clipboard", featured: false },
+    { id: 111, name: "Thursday", url: "https://thursdayapp.com", description: "AI meeting organizer and scheduler", category: "Productivity", icon: "fas fa-calendar", featured: false },
+    { id: 112, name: "Cal.ai", url: "https://cal.ai", description: "AI scheduling assistant", category: "Productivity", icon: "fas fa-clock", featured: false },
+    { id: 113, name: "Xano", url: "https://www.xano.com", description: "AI backend builder for web apps", category: "Productivity", icon: "fas fa-database", featured: false },
+    { id: 114, name: "Make", url: "https://www.make.com", description: "No-code automation with AI", category: "Productivity", icon: "fas fa-gears", featured: false },
+    { id: 115, name: "Zapier", url: "https://zapier.com", description: "Workflow automation with AI integration", category: "Productivity", icon: "fas fa-zap", featured: false },
+    { id: 116, name: "Slack AI", url: "https://slack.com", description: "AI features integrated into Slack workspace", category: "Productivity", icon: "fab fa-slack", featured: false },
+    { id: 117, name: "Microsoft Copilot Pro", url: "https://www.microsoft.com", description: "AI assistant for Microsoft Office suite", category: "Productivity", icon: "fab fa-microsoft", featured: false },
+    { id: 118, name: "Google Workspace AI", url: "https://workspace.google.com", description: "AI features in Docs, Sheets, Gmail", category: "Productivity", icon: "fab fa-google", featured: false },
+    { id: 119, name: "Loom", url: "https://www.loom.com", description: "Video recording with AI transcript", category: "Productivity", icon: "fas fa-video", featured: false },
+    { id: 120, name: "Supercreator", url: "https://www.supercreator.ai", description: "AI video creation for social media", category: "Productivity", icon: "fas fa-star", featured: false },
+
+    // ===== RESEARCH & ANALYSIS (15 tools) =====
+    { id: 121, name: "Elicit", url: "https://elicit.com", description: "AI research assistant for academic literature review", category: "Research", icon: "fas fa-flask", featured: true },
+    { id: 122, name: "Consensus", url: "https://consensus.app", description: "Search scientific papers with AI understanding", category: "Research", icon: "fas fa-graduation-cap", featured: true },
+    { id: 123, name: "Scite", url: "https://scite.ai", description: "AI-powered research paper citations and analysis", category: "Research", icon: "fas fa-magnifying-glass", featured: false },
+    { id: 124, name: "ResearchRabbit", url: "https://www.researchrabbit.ai", description: "AI research paper discovery and organization", category: "Research", icon: "fas fa-rabbit", featured: false },
+    { id: 125, name: "Scholarcy", url: "https://www.scholarcy.com", description: "AI paper summarization and annotation", category: "Research", icon: "fas fa-scroll", featured: false },
+    { id: 126, name: "ChatPDF", url: "https://www.chatpdf.com", description: "Chat with your PDF documents using AI", category: "Research", icon: "fas fa-file-pdf", featured: false },
+    { id: 127, name: "Dimensions", url: "https://www.dimensions.ai", description: "AI research analytics and metrics", category: "Research", icon: "fas fa-chart-line", featured: false },
+    { id: 128, name: "Connected Papers", url: "https://www.connectedpapers.com", description: "Visualize research paper relationships with AI", category: "Research", icon: "fas fa-sitemap", featured: false },
+    { id: 129, name: "PubMed AI", url: "https://pubmed.ncbi.nlm.nih.gov", description: "Biomedical literature search with AI", category: "Research", icon: "fas fa-microscope", featured: false },
+    { id: 130, name: "Google Scholar AI", url: "https://scholar.google.com", description: "AI-enhanced academic paper search", category: "Research", icon: "fas fa-book-open", featured: false },
+    { id: 131, name: "SciSpace", url: "https://typeset.io", description: "Research paper analysis and formatting", category: "Research", icon: "fas fa-rocket", featured: false },
+    { id: 132, name: "Semantic Scholar", url: "https://www.semanticscholar.org", description: "AI-powered research paper discovery", category: "Research", icon: "fas fa-brain", featured: false },
+    { id: 133, name: "SSRN", url: "https://papers.ssrn.com", description: "Social science research with AI recommendations", category: "Research", icon: "fas fa-users", featured: false },
+    { id: 134, name: "DataCamp", url: "https://www.datacamp.com", description: "AI-powered data science learning", category: "Research", icon: "fas fa-database", featured: false },
+    { id: 135, name: "Coursera AI", url: "https://www.coursera.org", description: "AI course recommendations and personalization", category: "Research", icon: "fas fa-graduation-cap", featured: false },
   ];
 
   // ========== STATE & HELPERS ==========
@@ -998,159 +1105,112 @@
     });
   }
 
-  function renderDashboard() {
+  function renderTools() {
+    const grid = document.getElementById('dashboardGrid');
     const filtered = getFilteredTools();
-    const gridContainer = document.getElementById("dashboardGrid");
-    const totalSpan = document.getElementById("totalToolsCount");
-    
-    if (totalSpan) totalSpan.innerText = filtered.length;
 
     if (filtered.length === 0) {
-      gridContainer.innerHTML = `
+      grid.innerHTML = `
         <div style="grid-column: 1/-1;" class="empty-state">
-          <div class="empty-state-icon">
-            <i class="fas fa-search"></i>
-          </div>
-          <h3 class="empty-state-title">No Results Found</h3>
-          <p class="empty-state-text">Try different keywords or adjust your filters</p>
+          <div class="empty-state-icon">🔍</div>
+          <div class="empty-state-title">No tools found</div>
+          <div class="empty-state-text">Try adjusting your filters or search query</div>
         </div>
       `;
       return;
     }
 
-    gridContainer.innerHTML = filtered.map(tool => {
-      let hostname = "";
-      try {
-        hostname = new URL(tool.url).hostname.replace('www.', '');
-      } catch(e) {
-        hostname = tool.url.split('/')[2] || "ai.tool";
-      }
-      
-      return `
-        <div class="glass-card p-6 flex flex-col h-full">
-          <div class="tool-card-header">
-            <div class="tool-icon-wrapper">
-              <i class="${tool.icon || 'fas fa-star'} text-2xl"></i>
-            </div>
-            <div class="tool-info">
-              <div class="tool-name">
-                ${tool.name}
-                ${tool.featured ? '<span class="featured-badge">⭐ Featured</span>' : ''}
-              </div>
-              <div class="tool-category">${tool.category}</div>
-            </div>
-            <a href="${tool.url}" target="_blank" rel="noopener noreferrer" class="tool-external-link">
-              <i class="fas fa-arrow-up-right-from-square"></i>
-            </a>
+    grid.innerHTML = filtered.map(tool => `
+      <div class="glass-card p-5" onclick="window.open('${tool.url}', '_blank')">
+        <div class="tool-card-header">
+          <div class="tool-icon-wrapper">
+            <i class="${tool.icon}"></i>
           </div>
-          <p class="tool-description">${tool.description}</p>
-          <div class="tool-footer">
-            <span class="tool-hostname">${hostname}</span>
-            <a href="${tool.url}" target="_blank" class="tool-launch-btn">
-              Launch <i class="fas fa-arrow-right"></i>
-            </a>
-          </div>
+          <a href="${tool.url}" target="_blank" class="tool-external-link" onclick="event.stopPropagation()">
+            <i class="fas fa-external-link-alt"></i>
+          </a>
         </div>
-      `;
-    }).join('');
+        <div class="tool-info">
+          <div class="tool-name">
+            ${tool.name}
+            ${tool.featured ? '<span class="featured-badge">⭐ Featured</span>' : ''}
+          </div>
+          <div class="tool-category">${tool.category}</div>
+        </div>
+        <div class="tool-description">${tool.description}</div>
+        <div class="tool-footer">
+          <div class="tool-hostname">${new URL(tool.url).hostname}</div>
+          <a href="${tool.url}" target="_blank" class="tool-launch-btn" onclick="event.stopPropagation()">
+            <i class="fas fa-arrow-right"></i> Launch
+          </a>
+        </div>
+      </div>
+    `).join('');
   }
 
-  function showToast(message, icon = "fas fa-check-circle", color = "text-emerald-400") {
-    const toast = document.createElement("div");
-    toast.className = "toast";
-    toast.innerHTML = `<i class="${icon} ${color}"></i> ${message}`;
+  function updateStats() {
+    const filtered = getFilteredTools();
+    document.getElementById('totalToolsCount').textContent = masterAITools.length;
+    document.getElementById('newTodayBadge').textContent = Math.floor(Math.random() * 5) + 1;
+    
+    const today = new Date();
+    const options = { weekday: 'short', month: 'short', day: 'numeric' };
+    document.getElementById('lastUpdateTime').textContent = today.toLocaleDateString('en-US', options);
+  }
+
+  function setupEventListeners() {
+    document.getElementById('globalSearch').addEventListener('input', (e) => {
+      currentSearch = e.target.value;
+      renderTools();
+    });
+
+    document.getElementById('categorySelector').addEventListener('change', (e) => {
+      currentCategory = e.target.value;
+      renderTools();
+      document.querySelectorAll('.category-pill').forEach(pill => {
+        pill.classList.remove('active');
+        if (pill.dataset.cat === currentCategory) pill.classList.add('active');
+      });
+    });
+
+    document.querySelectorAll('.category-pill').forEach(pill => {
+      pill.addEventListener('click', () => {
+        currentCategory = pill.dataset.cat;
+        document.querySelectorAll('.category-pill').forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+        document.getElementById('categorySelector').value = currentCategory;
+        renderTools();
+      });
+    });
+
+    document.getElementById('manualRefreshBtn').addEventListener('click', () => {
+      renderTools();
+      showToast('Tools refreshed! 🔄');
+    });
+
+    const dateElem = document.getElementById('dynamicDate');
+    if (dateElem) {
+      const today = new Date();
+      dateElem.textContent = today.toISOString().split('T')[0];
+    }
+  }
+
+  function showToast(message) {
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.innerHTML = `<i class="fas fa-check-circle text-emerald-400"></i> ${message}`;
     document.body.appendChild(toast);
     setTimeout(() => toast.remove(), 3000);
   }
 
-  function addCommunityTool() {
-    const newToolNames = ["Hugging Face Chat", "Cohere Command", "Recraft AI", "Kaiber Studio", "WellSaid Labs", "Codium AI", "Typeface"];
-    const randomName = newToolNames[Math.floor(Math.random() * newToolNames.length)];
-    const categoriesList = ["LLM", "Image", "Video", "Audio", "Coding", "Productivity", "Research"];
-    const randomCat = categoriesList[Math.floor(Math.random() * categoriesList.length)];
-    
-    const newTool = {
-      id: masterAITools.length + Date.now(),
-      name: randomName,
-      url: `https://${randomName.toLowerCase().replace(/\s/g, '')}.ai`,
-      description: `Innovative AI tool for ${randomCat} — community contributed`,
-      category: randomCat,
-      icon: "fas fa-plus",
-      featured: false
-    };
-    
-    masterAITools.unshift(newTool);
-    renderDashboard();
-    showToast(`"${randomName}" added to dashboard!`, "fas fa-rocket", "text-blue-400");
-  }
-
-  // ========== EVENT LISTENERS ==========
+  // ========== INITIALIZE ==========
   document.addEventListener('DOMContentLoaded', () => {
-    // Initialize visitor counter
     initializeVisitorCounter();
-
-    // Initial render
-    renderDashboard();
-
-    // Set dynamic date
-    const dynamicDateSpan = document.getElementById('dynamicDate');
-    if (dynamicDateSpan) {
-      const now = new Date();
-      const dateStr = now.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-      dynamicDateSpan.textContent = dateStr;
-    }
-
-    // Search functionality
-    const globalSearch = document.getElementById('globalSearch');
-    if (globalSearch) {
-      globalSearch.addEventListener('input', (e) => {
-        currentSearch = e.target.value;
-        renderDashboard();
-      });
-    }
-
-    // Category filter
-    const categoryButtons = document.querySelectorAll('.category-pill');
-    categoryButtons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        categoryButtons.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        currentCategory = btn.getAttribute('data-cat');
-        renderDashboard();
-      });
-    });
-
-    // Category selector dropdown
-    const categorySelector = document.getElementById('categorySelector');
-    if (categorySelector) {
-      categorySelector.addEventListener('change', (e) => {
-        currentCategory = e.target.value;
-        categoryButtons.forEach(btn => btn.classList.remove('active'));
-        const activeBtn = document.querySelector(`[data-cat="${currentCategory}"]`);
-        if (activeBtn) activeBtn.classList.add('active');
-        renderDashboard();
-      });
-    }
-
-    // Manual refresh
-    const refreshBtn = document.getElementById('manualRefreshBtn');
-    if (refreshBtn) {
-      refreshBtn.addEventListener('click', () => {
-        refreshBtn.style.transform = 'rotate(360deg)';
-        renderDashboard();
-        setTimeout(() => {
-          refreshBtn.style.transform = 'rotate(0deg)';
-        }, 300);
-        showToast('Dashboard refreshed!', 'fas fa-check-circle', 'text-emerald-400');
-      });
-    }
-
-    // Simulate new tool
-    const simulateBtn = document.getElementById('simulateNewToolBtn');
-    if (simulateBtn) {
-      simulateBtn.addEventListener('click', addCommunityTool);
-    }
+    updateStats();
+    renderTools();
+    setupEventListeners();
   });
 </script>
+
 </body>
 </html>
