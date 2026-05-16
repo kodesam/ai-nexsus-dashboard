@@ -6,7 +6,7 @@
   <title>AI Nexus • Live Dashboard | Daily evolving AI tools & apps</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&family=Courier+Prime:wght@400;700&family=Righteous&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
     * {
@@ -436,6 +436,7 @@
     .stat-card.blue .stat-icon { background: rgba(59, 130, 246, 0.25); border-color: #3b82f6; color: #60a5fa; }
     .stat-card.green .stat-icon { background: rgba(16, 185, 129, 0.25); border-color: #10b981; color: #6ee7b7; }
     .stat-card.cyan .stat-icon { background: rgba(6, 182, 212, 0.25); border-color: #06b6d4; color: #22d3ee; }
+    .stat-card.purple .stat-icon { background: rgba(139, 92, 246, 0.25); border-color: #8b5cf6; color: #c4b5fd; }
 
     .stat-value {
       display: flex;
@@ -650,6 +651,38 @@
       animation: gradientShift 8s ease infinite;
     }
 
+    /* Visitor Counter */
+    .visitor-counter {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.5rem 1rem;
+      background: rgba(139, 92, 246, 0.1);
+      border: 1px solid rgba(139, 92, 246, 0.4);
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      font-family: 'Space Mono', monospace;
+      color: #c4b5fd;
+      box-shadow: 0 0 15px rgba(139, 92, 246, 0.2);
+      animation: pulse-visitor 2s ease-in-out infinite;
+    }
+
+    .visitor-counter i {
+      font-size: 0.9rem;
+    }
+
+    .visitor-count {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #ddd6fe;
+    }
+
+    @keyframes pulse-visitor {
+      0%, 100% { box-shadow: 0 0 15px rgba(139, 92, 246, 0.2); }
+      50% { box-shadow: 0 0 30px rgba(139, 92, 246, 0.5); }
+    }
+
     /* Empty State */
     .empty-state {
       text-align: center;
@@ -732,6 +765,11 @@
         padding: 0.6rem 1.2rem;
         font-size: 0.8rem;
       }
+
+      .visitor-counter {
+        font-size: 0.7rem;
+        padding: 0.4rem 0.8rem;
+      }
     }
   </style>
 </head>
@@ -811,11 +849,11 @@
           <div class="stat-value-label">Added Today</div>
         </div>
       </div>
-      <div class="stat-card blue">
-        <div class="stat-icon"><i class="fas fa-bolt"></i></div>
+      <div class="stat-card purple">
+        <div class="stat-icon"><i class="fas fa-eye"></i></div>
         <div class="stat-value">
-          <div class="stat-value-num">100%</div>
-          <div class="stat-value-label">Live Feed</div>
+          <div class="stat-value-num" id="visitorCountDisplay">0</div>
+          <div class="stat-value-label">Total Visitors</div>
         </div>
       </div>
     </div>
@@ -837,6 +875,11 @@
       <span class="text-xs text-slate-500 uppercase tracking-wider">✨ AI Nexus Dashboard</span>
       <span class="hidden md:inline text-slate-600">•</span>
       <span id="dynamicDate" class="text-xs text-slate-500 font-mono"></span>
+      <span class="hidden md:inline text-slate-600">•</span>
+      <div class="visitor-counter">
+        <i class="fas fa-users"></i>
+        <span class="visitor-count" id="visitorCounter">0</span>
+      </div>
     </div>
     <div class="flex flex-col sm:flex-row gap-3 justify-center items-center">
       <span class="developer-credit text-xs">
@@ -857,6 +900,50 @@
 </div>
 
 <script>
+  // ========== VISITOR COUNTER SYSTEM ==========
+  function initializeVisitorCounter() {
+    const VISITOR_KEY = 'ai_nexus_visitors';
+    const VISITOR_SESSION_KEY = 'ai_nexus_session_id';
+    
+    // Generate or get session ID
+    let sessionId = sessionStorage.getItem(VISITOR_SESSION_KEY);
+    if (!sessionId) {
+      sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+      sessionStorage.setItem(VISITOR_SESSION_KEY, sessionId);
+    }
+    
+    // Get current visitor count
+    let visitors = JSON.parse(localStorage.getItem(VISITOR_KEY)) || [];
+    
+    // Check if this session is already counted today
+    const today = new Date().toISOString().split('T')[0];
+    const todayVisitors = visitors.filter(v => v.date === today);
+    const isNewVisitor = !todayVisitors.some(v => v.sessionId === sessionId);
+    
+    // Add new visitor if needed
+    if (isNewVisitor) {
+      visitors.push({
+        sessionId: sessionId,
+        date: today,
+        timestamp: Date.now()
+      });
+      localStorage.setItem(VISITOR_KEY, JSON.stringify(visitors));
+    }
+    
+    // Get total unique visitors (all time)
+    const uniqueSessions = new Set(visitors.map(v => v.sessionId));
+    const totalVisitors = uniqueSessions.size;
+    
+    // Update display
+    const visitorCounter = document.getElementById('visitorCounter');
+    const visitorCountDisplay = document.getElementById('visitorCountDisplay');
+    
+    if (visitorCounter) visitorCounter.textContent = totalVisitors;
+    if (visitorCountDisplay) visitorCountDisplay.textContent = totalVisitors;
+    
+    return totalVisitors;
+  }
+
   // ========== ENHANCED AI TOOLS DATABASE ==========
   const masterAITools = [
     { id: 1, name: "ChatGPT", url: "https://chat.openai.com", description: "GPT-4o flagship model with multimodal capabilities", category: "LLM", icon: "fab fa-comments", featured: true },
@@ -867,7 +954,7 @@
     { id: 6, name: "ElevenLabs", url: "https://elevenlabs.io", description: "Multilingual TTS with natural voice cloning technology", category: "Audio", icon: "fas fa-microphone", featured: true },
     { id: 7, name: "GitHub Copilot", url: "https://github.com/features/copilot", description: "AI pair programmer for VS Code and major IDEs", category: "Coding", icon: "fab fa-github", featured: true },
     { id: 8, name: "Perplexity AI", url: "https://www.perplexity.ai", description: "Real-time search engine powered by advanced AI", category: "LLM", icon: "fas fa-magnifying-glass", featured: false },
-    { id: 9, name: "Stable Diffusion 3", url: "https://stability.ai", description: "Open-source image synthesis with improved text rendering", category: "Image", icon: "fas fa-wand-magic-sparkles", featured: true },
+    { id: 9, name: "Stable Diffusion 3", url: "https://stability.ai", description: "Open-source image synthesis with improved text rendering", category: "Image", icon: "fas fa-wand-magic-sparkles", featured: false },
     { id: 10, name: "Pika 2.0", url: "https://pika.art", description: "Text-to-video with advanced motion controls", category: "Video", icon: "fas fa-film", featured: true },
     { id: 11, name: "Descript", url: "https://www.descript.com", description: "AI-powered podcast and video editing platform", category: "Audio", icon: "fas fa-scissors", featured: false },
     { id: 12, name: "Replit AI", url: "https://replit.com/ai", description: "Real-time code generation inside browser IDE", category: "Coding", icon: "fas fa-laptop-code", featured: false },
@@ -998,79 +1085,72 @@
   }
 
   // ========== EVENT LISTENERS ==========
-  function initEventListeners() {
-    const searchBox = document.getElementById("globalSearch");
-    const categorySelect = document.getElementById("categorySelector");
-    const catPills = document.querySelectorAll("[data-cat]");
-    const refreshBtn = document.getElementById("manualRefreshBtn");
-    const suggestBtn = document.getElementById("simulateNewToolBtn");
-    
-    if (searchBox) {
-      searchBox.addEventListener("input", (e) => { 
-        currentSearch = e.target.value; 
-        renderDashboard(); 
-      });
+  document.addEventListener('DOMContentLoaded', () => {
+    // Initialize visitor counter
+    initializeVisitorCounter();
+
+    // Initial render
+    renderDashboard();
+
+    // Set dynamic date
+    const dynamicDateSpan = document.getElementById('dynamicDate');
+    if (dynamicDateSpan) {
+      const now = new Date();
+      const dateStr = now.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+      dynamicDateSpan.textContent = dateStr;
     }
 
-    if (categorySelect) {
-      categorySelect.addEventListener("change", (e) => { 
-        currentCategory = e.target.value;
-        catPills.forEach(btn => { 
-          btn.classList.toggle("active", btn.getAttribute("data-cat") === currentCategory);
-        });
+    // Search functionality
+    const globalSearch = document.getElementById('globalSearch');
+    if (globalSearch) {
+      globalSearch.addEventListener('input', (e) => {
+        currentSearch = e.target.value;
         renderDashboard();
       });
     }
-    
-    catPills.forEach(btn => {
-      btn.addEventListener("click", () => {
-        currentCategory = btn.getAttribute("data-cat");
-        if (categorySelect) categorySelect.value = currentCategory;
-        catPills.forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
+
+    // Category filter
+    const categoryButtons = document.querySelectorAll('.category-pill');
+    categoryButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        categoryButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentCategory = btn.getAttribute('data-cat');
         renderDashboard();
       });
     });
-    
-    if (refreshBtn) {
-      refreshBtn.addEventListener("click", () => {
-        refreshBtn.style.animation = "none";
-        setTimeout(() => refreshBtn.style.animation = "", 10);
+
+    // Category selector dropdown
+    const categorySelector = document.getElementById('categorySelector');
+    if (categorySelector) {
+      categorySelector.addEventListener('change', (e) => {
+        currentCategory = e.target.value;
+        categoryButtons.forEach(btn => btn.classList.remove('active'));
+        const activeBtn = document.querySelector(`[data-cat="${currentCategory}"]`);
+        if (activeBtn) activeBtn.classList.add('active');
         renderDashboard();
-        showToast(`Dashboard refreshed! ${masterAITools.length} tools available`, "fas fa-sync-alt", "text-cyan-400");
       });
     }
-    
-    if (suggestBtn) {
-      suggestBtn.addEventListener("click", addCommunityTool);
-    }
-  }
 
-  function setDynamicDate() {
-    const now = new Date();
-    const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
-    const dateElem = document.getElementById("dynamicDate");
-    if (dateElem) {
-      dateElem.innerHTML = now.toLocaleDateString(undefined, options);
+    // Manual refresh
+    const refreshBtn = document.getElementById('manualRefreshBtn');
+    if (refreshBtn) {
+      refreshBtn.addEventListener('click', () => {
+        refreshBtn.style.transform = 'rotate(360deg)';
+        renderDashboard();
+        setTimeout(() => {
+          refreshBtn.style.transform = 'rotate(0deg)';
+        }, 300);
+        showToast('Dashboard refreshed!', 'fas fa-check-circle', 'text-emerald-400');
+      });
     }
-    const lastUpdateElem = document.getElementById("lastUpdateTime");
-    if (lastUpdateElem) {
-      const dateStr = now.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
-      lastUpdateElem.innerHTML = dateStr;
-    }
-    const newTodayElem = document.getElementById("newTodayBadge");
-    if (newTodayElem) {
-      newTodayElem.innerHTML = `${Math.floor(Math.random() * 5) + 1}`;
-    }
-  }
 
-  function init() {
-    renderDashboard();
-    initEventListeners();
-    setDynamicDate();
-  }
-  
-  init();
+    // Simulate new tool
+    const simulateBtn = document.getElementById('simulateNewToolBtn');
+    if (simulateBtn) {
+      simulateBtn.addEventListener('click', addCommunityTool);
+    }
+  });
 </script>
 </body>
 </html>
